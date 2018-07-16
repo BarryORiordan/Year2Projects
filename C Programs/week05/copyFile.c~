@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+char flipChar(char c);
+
+int main(int argc, char* argv[])
+{
+    char c;
+    FILE *from, *to;
+    int flipping = (strcmp(argv[1], "-f") == 0);
+
+    from = fopen(argv[2], "r");
+    if (from == NULL)
+    {
+        perror(argv[2]);                //If file.txt does not exist, "file.txt" is output
+        exit(1);
+    }
+
+    to = fopen(argv[3], "w");
+    if (to == NULL)
+        	to = fopen(argv[3], "w+");  //If copy.txt does not exist, "copy.txt" is output
+
+    if(flipping)                        //File exists so start reading
+        putc(flipChar(c), to);          //Writes the flipped char c to copy.txt
+    else
+        put((c), to);                   //Writes the char c to copy.txt
+
+    fclose(from);
+    fclose(to);
+    exit(0);
+}
+
+char flipChar(char c)
+{
+    if ('a' <= c && c <= 'z')
+    {
+        return 'z'- c + 'a';
+    }
+
+    else if ('A' <= c && c <= 'Z')
+    {
+        return 'Z'- c + 'A';
+    }
+
+    else if ('0' <= c && c <= '9')
+    {
+        return '9' - c + '0';
+    }
+
+    return c;
+}

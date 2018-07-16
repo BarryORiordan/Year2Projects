@@ -1,0 +1,124 @@
+/*****************************************************
+* Skeleton Code for the lab exercise. DO NOT add any
+* more printf statements other than those provided
+* in this skeleton code. Otherwise, your output may
+* not match with the desired output and you will be marked
+* down. Only modify the values printing with the given
+* printf statements as appropriate.
+*
+* Note: properly indent your code so it looks beautiful
+* to read. Also add BRIEF comments explaining your code.
+* Poorly written code will be marked down.
+***************************************************/
+
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "utils.h"
+
+int main(int argc, char **argv)
+{
+    char *refStr, *tolStr;
+    float ref, tol;
+
+    refStr = tolStr = NULL;
+
+    if(strcmp(argv[1], "-r") == 0)                      //Check to see if "-r" is in argv[1].
+    {
+        refStr = argv[2];                               //Input for refStr therefore in argv[2].
+        tolStr = argv[4];                               //Input for tolStr therefore in argv[4].
+    }
+
+    else                                                //Otherwise "-r" is in argv[3].
+    {
+        tolStr = argv[2];                               //Then just swap the storage variables
+        refStr = argv[4];
+    }
+
+    ref = strtof(refStr, NULL);                         //Convert char refStr to float.
+    tol = strtof(tolStr, NULL);                         //Convert char tolStr to float.
+
+    if(argc != 5 || refStr == NULL || tolStr == NULL)   //Check if arguments were passed in correctly.
+    {
+        fprintf(stderr, "Usage: %s -r ref -t tol\n", argv[0]);
+        exit(1);
+    }
+
+    //Add code to note start time and date and then print it.
+    //Right now printing just a default string
+
+
+
+    struct tm *local;
+    time_t start, end;
+
+    time(&start);               //Read and record clock.
+    local = localtime(&start);
+    printf("# Start time and date: %s", asctime(local));
+
+    //Add rest of the functionality.
+
+    int rct, cct;         //Put if maybe here instead of the scanf to initialize the values to rct and cct.
+    scanf("%d", &rct);
+    scanf("%d", &cct);
+
+    float** rows = (float **) malloc(rct * sizeof(float *));        //Allocate memory to store (rrt x cct) matrix of floats.
+    if(rows == 0)
+    {
+        fprintf(stderr, "Couldn't allocate sufficient space.\n");   //If rows = 0, space couldn't be allocated.
+        exit(1);
+    }
+
+    int i;
+    for(i = 0; i < rct; i++)                                        //Loop to allocate memory to store row space.
+    {
+        float* row = (float *) malloc(cct * sizeof(float));
+        if(row == 0)
+        {
+            fprintf(stderr, "Couldn't allocate sufficient row space.\n");
+            exit(1);
+        }
+        rows[i] = row;
+    }
+
+    int r, c;
+    for(r = 0; r < rct; r++)                    //Loop to read matrix into array rows.
+        for(c = 0; c < cct; c++)
+            scanf("%f", &rows[r][c]);
+   
+    // The following print statement should be a part of a loop
+    // Uncomment it tailor it to your code but ONLY the part that
+    // comes after:  \n",
+
+    int result, count = 0;
+
+    for(r = 0; r < rct; r++)        //Loop to go through matrix, checking if each value is within the tolerance.
+    {
+        for(c = 0; c < cct; c++)
+        {
+            result = approxEqual(rows[r][c], ref, tol);
+            if(result == 1)
+            {
+                fprintf(stdout, "r = %d, c = %d: %.6f\n", r, c, rows[r][c]);
+                count++;
+            }
+        }
+    }
+
+    // output the final count of matches. Again, you may ONLY modify
+    // the part of the print statement after:  \n",
+    fprintf(stdout, "Found %d approximate matches.\n", count);
+
+
+
+    //finally, print out the end time and date. Right now only printing
+    //a default string.
+    //printf("# End time and date: %s", tnd);
+
+    time(&end);               //Read and record clock.
+    local = localtime(&end);
+    printf("# End time and date: %s", asctime(local));
+    return 0;
+}
